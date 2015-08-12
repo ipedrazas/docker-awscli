@@ -1,32 +1,57 @@
 Docker awscli
 =============
 
-A container to run awcli and s3cmd command. This repo triggers autobuild and the image is available as suet/awscli. 
+An AWS CLI toolbox in container. See Dockerfile.
+This repo triggers auto-build and push images to dockerhub.com/u/xueshanf/awscli.
 
-Usage example
-=============
-
-Check software versions:
+To check AWS cli version
 
 ```
-core@n1 docker run --rm  suet/awscli aws --version
-aws-cli/1.7.34 Python/2.7.9 Linux/4.0.3
+docker run --rm  xueshanf/awscli aws --version
+docker run --rm  xueshanf/awscli s3cmd --version 
 ```
 
+Examples
+========
+
+Rebuild image. This will upgrade the package too:
+
 ```
-core@n1 docker run --rm  suet/awscli 3cmd --version
-s3cmd version 1.5.2
+core@n1 git clone https://github.com/xueshanf/docker-awscli.git
+core@n1 docker build -t xueshanf/awscli:latest .
 ```
+
+Ready-made tools:
+
+```
+core@n1 docker run --rm  xueshanf/awscli get-metadata help
+Usage: get-metadata <argument>
+ACCOUNT
+HOSTNAME
+INSTANCEID
+PRIVATEIP
+PUBLICIP
+ROLE
+STSCRED
+STSTOKEN
+STSKEY
+SECRET
+ZONE
+
+core@n1 docker run --rm  xueshanf/awscli get-metadata instanceid
+i-453266b2
+```
+Command line argument is not case sensitve. 
 
 Copy data from s3 bucket to local file system:
 
 ```
-/usr/bin/docker run --rm -v /var/apps:/apps suet/awscli:latest aws s3 cp --recursive s3://<bucket>/apps/nginx/ /apps/nginx
+core@n1 /usr/bin/docker run --rm -v /var/apps:/apps xueshanf/awscli:latest aws s3 cp s3://<bucket>/apps/nginx/ /apps/nginx
 ```
 
-Registry an AWS instance to load balancer:
-
+Register an AWS instance with a load balancer.
 Pass in AWS credential (not needed if the instances has IAM role based permission):
+
 ```
 sudo more /root/.aws/envvars
 AWS_ACCESS_KEY_ID=<key id>
@@ -38,7 +63,7 @@ AWS_DEFAULT_REGION=us-west-2
 #!/bin/bash
 AWS_CONFIG_ENV=/root/.aws/envvars
 INSTANCE=$(/usr/bin/curl -s http://169.254.169.254/latest/meta-data/instance-id)
-IMAGE=suet/awscli:latest
+IMAGE=xueshanf/awscli:latest
 
 CMD="aws elb register-instances-with-load-balancer \
     --load-balancer-name <elb name> --instances $INSTANCE "
