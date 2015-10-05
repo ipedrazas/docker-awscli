@@ -8,7 +8,7 @@ To check AWS cli version
 
 ```
 docker run --rm  xueshanf/awscli aws --version
-docker run --rm  xueshanf/awscli s3cmd --version 
+docker run --rm  xueshanf/awscli s3cmd --version
 ```
 
 Examples
@@ -41,7 +41,7 @@ ZONE
 core@n1 docker run --rm  xueshanf/awscli get-metadata instanceid
 i-453266b2
 ```
-Command line argument is not case sensitve. 
+Command line argument is not case sensitve.
 
 Copy data from s3 bucket to local file system:
 
