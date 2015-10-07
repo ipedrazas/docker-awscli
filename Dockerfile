@@ -6,14 +6,11 @@ FROM alpine:3.2
 MAINTAINER Ivan Pedrazas <ipedrazas@gmail.com>
 
 RUN apk --update add \
-      less \
-      groff \
       python \
       py-pip \
       jq \
-      curl \
-      bash && \
-      pip install --upgrade awscli s3cmd && \
+      curl && \
+      pip install --upgrade awscli  && \
       mkdir /root/.aws
 
 COPY get-metadata /usr/local/bin/get-metadata
